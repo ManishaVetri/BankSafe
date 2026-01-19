@@ -4,34 +4,40 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.edutech.progressive.dao.TransactionDAO;
 import com.edutech.progressive.entity.Transactions;
 import com.edutech.progressive.service.TransactionService;
 
 public class TransactionServiceImpl implements TransactionService {
+    private TransactionDAO transactionDAO;
+    
+    public TransactionServiceImpl(TransactionDAO transactionDAO) {
+        this.transactionDAO = transactionDAO;
+    }
 
     @Override
     public List<Transactions> getAllTransactions() throws SQLException {
-        return new ArrayList<>();
+        return this.transactionDAO.getAllTransactions();
     }
 
     @Override
     public Transactions getTransactionById(int transactionId) throws SQLException {
-        return null;
+        return this.transactionDAO.getTransactionById(transactionId);
     }
 
     @Override
     public int addTransaction(Transactions transaction) throws SQLException {
-        return -1;
+        return this.transactionDAO.addTransaction(transaction);
     }
 
     @Override
     public void updateTransaction(Transactions transaction) throws SQLException {
-       
+       this.transactionDAO.updateTransaction(transaction);
     }
 
     @Override
     public void deleteTransaction(int transactionId) throws SQLException {
-       
+       this.transactionDAO.deleteTransaction(transactionId);
     }
 
     @Override
