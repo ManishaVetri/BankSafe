@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.edutech.progressive.entity.Accounts;
+import org.springframework.stereotype.Service;
 
+import com.edutech.progressive.entity.Accounts;
+@Service
 public class AccountServiceImplArraylist {
+    
     private static List<Accounts> accountsList=new ArrayList<>();
     public List<Accounts> getAllAccounts() throws SQLException {
         return accountsList;
