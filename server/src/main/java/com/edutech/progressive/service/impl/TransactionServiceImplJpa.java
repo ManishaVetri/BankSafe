@@ -1,12 +1,15 @@
 package com.edutech.progressive.service.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.edutech.progressive.entity.Accounts;
 import com.edutech.progressive.entity.Transactions;
+import com.edutech.progressive.exception.AccountNotFoundException;
 import com.edutech.progressive.repository.AccountRepository;
 import com.edutech.progressive.repository.TransactionRepository;
 import com.edutech.progressive.service.TransactionService;
@@ -21,35 +24,100 @@ public class TransactionServiceImplJpa implements TransactionService {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
     }
-
+       
     @Override
-    public List<Transactions> getAllTransactions() throws SQLException {
-      return null;
+    public List<Transactions> getAllTransactions() {
+        return transactionRepository.findAll();
+        // return null;
+
     }
 
-    @Override
-    public Transactions getTransactionById(int transactionId) throws SQLException {
-      return null;
-    }
+    
 
     @Override
-    public int addTransaction(Transactions transaction) throws SQLException {
-     return -1;
-    }
-
-    @Override
-    public void updateTransaction(Transactions transaction) throws SQLException {
+    public Transactions getTransactionById(int transactionId) {
+        return transactionRepository.findById(transactionId).orElse(null);
+        // return null;
         
     }
 
     @Override
-    public void deleteTransaction(int transactionId) throws SQLException {
-      
+    public int addTransaction(Transactions transaction) throws SQLException {
+        // Accounts account = accountRepository.findByAccountId(transaction.getAccountId());
+        // double balance = account.getBalance();
+        // if (transaction.getAmount() > 30000 && transaction.getTransactionType().equalsIgnoreCase("debit")) {
+        //     throw new WithdrawalLimitException("Exceeded the withdrawal limit.");
+        // }
+        // if (balance < transaction.getAmount() && transaction.getTransactionType().equalsIgnoreCase("debit")) {
+        //     throw new OutOfBalanceException("Transaction amount exceeds the total balance available in the account.");
+        // }
+        // if (transaction.getTransactionType().equalsIgnoreCase("credit")) {
+        //     balance = balance + transaction.getAmount();
+        // }
+        // else {
+        //     balance = balance - transaction.getAmount();
+        // }
+        // account.setBalance(balance);
+        // accountRepository.save(account);
+        return transactionRepository.save(transaction).getTransactionId();
+        // return -1;
+        
+    }
+
+    @Override
+    public void updateTransaction(Transactions transaction) {
+        transactionRepository.save(transaction);
+    }
+
+    @Override
+    public void deleteTransaction(int transactionId) {
+        transactionRepository.deleteById(transactionId);
     }
 
     @Override
     public List<Transactions> getTransactionsByCustomerId(int customerId) throws SQLException {
-        return null;
+        List<Accounts> accountsList = accountRepository.getAccountsByCustomerCustomerId(customerId);
+        List<Transactions> allTransactions = new ArrayList<>();
+        if (accountsList.isEmpty()) {
+            throw new AccountNotFoundException("No accounts found linked with this customer");
+        }
+        for (Accounts account : accountsList) {
+            List<Transactions> transactionsForAccount = transactionRepository.findByAccountsAccountId(account.getAccountId());
+            allTransactions.addAll(transactionsForAccount);
+        }
+        return allTransactions;
+        // return null;
+        
     }
-
 }
+//     @Override
+//     public List<Transactions> getAllTransactions() throws SQLException {
+//       return null;
+//     }
+
+//     @Override
+//     public Transactions getTransactionById(int transactionId) throws SQLException {
+//       return null;
+//     }
+
+//     @Override
+//     public int addTransaction(Transactions transaction) throws SQLException {
+//      return -1;
+//     }
+
+//     @Override
+//     public void updateTransaction(Transactions transaction) throws SQLException {
+        
+//     }
+
+//     @Override
+//     public void deleteTransaction(int transactionId) throws SQLException {
+      
+//     }
+
+//     @Override
+//     public List<Transactions> getTransactionsByCustomerId(int customerId) throws SQLException {
+//         return null;
+//     }
+
+// }
